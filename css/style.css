@@ -27,6 +27,15 @@ header.site-header {
   text-align: center;
 }
 
+header.site-header .brand {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 0.3rem;
+}
+
 header.site-header h1 {
   margin: 0 0 0.4rem;
   font-size: clamp(1.5rem, 4vw, 2.2rem);
@@ -213,6 +222,17 @@ footer {
   color: var(--muted);
   font-size: 0.85rem;
   padding: 1.5rem 1rem 2.5rem;
+}
+
+footer .visitor-stats {
+  margin: 0.6rem 0 0.2rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+}
+
+footer .credit {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
 }
 
 @media (max-width: 640px) {
