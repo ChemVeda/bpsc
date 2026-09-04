@@ -10,30 +10,46 @@ function counterKey(path) {
   return `${COUNTER_NAMESPACE}__${clean}`;
 }
 
-function fileUrl(path) {
-  const base = SITE_BASE_URL ? SITE_BASE_URL.replace(/\/$/, "") : "";
-  return base ? `${base}/${path}` : path;
+function siteBase() {
+  if (SITE_BASE_URL) return SITE_BASE_URL.replace(/\/$/, "");
+  // Auto-detect the folder the page is actually being served from, so the
+  // Copy Link / WhatsApp share links always contain a real, working URL —
+  // this works out of the box on GitHub Pages even before SITE_BASE_URL is
+  // configured, including project sites like yourname.github.io/repo/.
+  return new URL(".", window.location.href).href.replace(/\/$/, "");
 }
 
-async function getCount(path) {
+function fileUrl(path) {
+  return `${siteBase()}/${path}`;
+}
+
+async function getCountByKey(key) {
   try {
-    const res = await fetch(`${COUNTER_BASE}/get/${counterKey(path)}`);
-    if (!res.ok) return 0;
+    const res = await fetch(`${COUNTER_BASE}/get/${key}`);
+    if (!res.ok) return null;
     const data = await res.json();
-    return data.value || 0;
+    return data.value ?? 0;
   } catch {
     return null; // service unreachable — show a dash instead of 0
   }
 }
 
-async function bumpCount(path) {
+async function bumpCountByKey(key) {
   try {
-    const res = await fetch(`${COUNTER_BASE}/hit/${counterKey(path)}`);
+    const res = await fetch(`${COUNTER_BASE}/hit/${key}`);
     const data = await res.json();
     return data.value;
   } catch {
     return null;
   }
+}
+
+async function getCount(path) {
+  return getCountByKey(counterKey(path));
+}
+
+async function bumpCount(path) {
+  return bumpCountByKey(counterKey(path));
 }
 
 function whatsappShareUrl(title, url) {
@@ -131,10 +147,18 @@ function renderTable() {
   }
 }
 
+async function trackVisit() {
+  const key = `${COUNTER_NAMESPACE}__site_visits`;
+  const val = await bumpCountByKey(key);
+  const el = document.getElementById("visitor-count");
+  if (el) el.textContent = val === null ? "—" : val;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".channel-link").forEach((el) => {
     el.href = CHANNEL_LINK;
     if (el.dataset.label) el.textContent = CHANNEL_LABEL;
   });
   renderTable();
+  trackVisit();
 });

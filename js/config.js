@@ -11,8 +11,9 @@ const CHANNEL_LABEL = "Join our WhatsApp Channel";
 // sharing the site — changing it later resets all counts to zero.
 const COUNTER_NAMESPACE = "yourusername-bpsc-tre-papers";
 
-// Base URL of your published site, used to build the absolute file URL
-// shown/copied for each paper and included in WhatsApp shares. Set this to
-// your GitHub Pages URL, e.g. "https://yourusername.github.io/your-repo".
-// Leave as "" to fall back to whatever domain the page is currently on.
+// Base URL of your published site. Optional — if left as "", the site
+// auto-detects it from the browser's current address, so Copy Link and
+// WhatsApp Share already produce the correct real download URL either way.
+// Set it explicitly (e.g. "https://yourusername.github.io/your-repo") only
+// if you want to force a specific domain, such as a custom domain.
 const SITE_BASE_URL = "";
